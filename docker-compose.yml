@@ -2,14 +2,25 @@ version: '3'
 services:
   app:
     build:
-      context: .
+      context: ./web
       dockerfile: Dockerfile
     volumes:
       - ./:/usr/src/app
-    command: sh -c "cd todoapp && npm run dev"
+    command: sh -c "cd web && npm run dev"
     ports:
       - "3000:3000"
-
+  java:
+    container_name: java
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./app/src:/usr/src/app/src  # パスを修正
+    ports:
+      - 8080:8080 # 通常実行
+      - 5050:5050 # デバッグ用
+      
   database:
     image: mysql:8.3.0
     container_name: database

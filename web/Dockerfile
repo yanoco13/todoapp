@@ -10,8 +10,16 @@ RUN npm ci
 # アプリケーションのソースコードをコピー
 COPY . .
 
-# .nextディレクトリの権限を設定
-RUN chown -R node:node /usr/src/app/.next
+# OSに応じて権限設定コマンドを変更
+ARG TARGETOS
+
+RUN if [ "$TARGETOS" = "windows" ]; then \
+      echo "Running on Windows"; \
+      echo "Please run icacls manually on the host."; \
+    else \
+      echo "Running on Mac"; \
+      chown -R node:node /usr/src/app/.next; \
+    fi
 
 USER node
 

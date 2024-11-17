@@ -4,6 +4,8 @@ services:
     build:
       context: ./web
       dockerfile: Dockerfile
+      args:
+        TARGETOS: ${TARGETOS}  # 環境変数からTARGETOSを取得
     volumes:
       - ./web:/usr/src/app
       - /usr/src/app/node_modules

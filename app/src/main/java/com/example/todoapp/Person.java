@@ -2,11 +2,12 @@ package com.example.todoapp;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import lombok.Data;
 
 @Entity
@@ -21,16 +22,19 @@ public class Person {
 	private String personName;
 
 	@Column(name = "record_date")
+	@CreationTimestamp
 	private Date recordDate;
 
 	@Column(name = "record_user")
 	private String recordUser;
 
 	@Column(name = "create_date")
+	@CreationTimestamp
 	private Date createDate;
 
 	@Column(name = "create_user")
 	private String createUser;
+
 	public String getPersonId() {
 		return this.personId;
 	}

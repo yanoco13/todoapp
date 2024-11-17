@@ -1,16 +1,3 @@
-# FROM openjdk:11
-
-# RUN apt-get update
-# WORKDIR /usr/src/app
-
-# # エントリーポイントスクリプトをコピー
-# COPY entrypoint.sh /usr/src/app/
-# RUN sed -i 's/\r$//' /usr/src/app/entrypoint.sh
-# RUN chmod +x /usr/src/app/entrypoint.sh
-
-# # エントリーポイントを設定
-# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-
 # ビルドステージ
 FROM maven:3.9.5-eclipse-temurin-17 AS build
 WORKDIR /app
@@ -27,4 +14,9 @@ RUN mvn package -DskipTests
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+
+# エントリーポイントを設定
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# 必要に応じてポートを公開
+EXPOSE 8080

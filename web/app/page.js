@@ -47,7 +47,7 @@ export default function Home() {
           value={userId} 
           onChange={(e) => setUserId(e.target.value)}
         />
-        <button type="submit" onClick={fetchApi}>送信</button>
+        <button type="submit" onClick={insertApi}>送信</button>
       </div>
     </>
   );

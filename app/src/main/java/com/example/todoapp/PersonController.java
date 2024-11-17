@@ -58,7 +58,9 @@ public class PersonController {
 
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody @Valid Person person){
-        logger.info("Creating a new person for insert");
+        System.out.println("--------------!!!!!!!!!!!!!!!!!!!!!!");
+        logger.info(person.getPersonId);
+        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         Date nowDate = new Date();
         person.setPersonId(person.getPersonId() != null ? person.getPersonId() : UUID.randomUUID().toString());
         person.setPersonName(person.getPersonName() != null ? person.getPersonName() : UUID.randomUUID().toString());

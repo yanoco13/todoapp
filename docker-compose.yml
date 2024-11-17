@@ -5,10 +5,13 @@ services:
       context: ./web
       dockerfile: Dockerfile
     volumes:
-      - ./:/usr/src/app
-    command: sh -c "cd web && npm run dev"
+      - ./web:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=development
   
   java:
     build: 

@@ -1,20 +1,39 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
+import { useForm } from "react-hook-form";
 
 export default function Home() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
+
     const router = useRouter();
-    const [stones, setStone] = useState([]);
+    const [user, setUser] = useState([]);
     const [userId, setUserId] = useState("");
     const fetchApi = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/persons", { method: "GET" });
             const data = await response.json();
-            setStone(data);
+            setUser(data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
+
+    const fetchByIdApi = async (id) => {
+        try {
+            const response = await fetch("http://localhost:8080/api/persons?id=" + id, { method: "GET" });
+            const data = await response.json();
+            setUser(data);
+            console.log("fetch by id");
+            console.log(user);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
 
     const insertApi = async () => {
         try {
@@ -39,6 +58,9 @@ export default function Home() {
     };
 
     const handleLogin = () => {
+        fetchByIdApi(userId);
+        console.log(user);
+        if (user.length > 0) return;
         insertApi();
         router.push('/todo');
     };
@@ -46,14 +68,15 @@ export default function Home() {
     return (
         <>
             <div>
-                <h1>Login Page</h1>
-                <p>ユーザID</p>
-                <input
-                    type="text"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                />
-                <button type="submit" onClick={handleLogin}>送信</button>
+                <h1>Login</h1>
+                <form onSubmit={handleLogin}>
+                    <div>
+                        <p>ユーザID</p>
+                        <input type="text" id="name" {...register("name", { required: "ユーザIDを入力してください。" })} />
+                        <span id="name_error"></span>
+                    </div>
+                    <button id="submit_btn">送信</button>
+                </form>
             </div>
         </>
     );

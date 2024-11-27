@@ -6,6 +6,7 @@ COPY package*.json ./
 
 # 依存関係のインストール
 RUN npm ci
+RUN npm install react-hook-form
 
 # アプリケーションのソースコードをコピー
 COPY . .
@@ -14,12 +15,12 @@ COPY . .
 ARG TARGETOS
 
 RUN if [ "$TARGETOS" = "windows" ]; then \
-      echo "Running on Windows"; \
-      echo "Please run icacls manually on the host."; \
-    else \
-      echo "Running on Mac"; \
-      chown -R node:node /usr/src/app/.next; \
-    fi
+  echo "Running on Windows"; \
+  echo "Please run icacls manually on the host."; \
+  else \
+  echo "Running on Mac"; \
+  chown -R node:node /usr/src/app/.next; \
+  fi
 
 USER node
 

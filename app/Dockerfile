@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # エントリーポイントを設定
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.util.logging.ConsoleHandler.level=ALL", "-jar", "app.jar"]
 
 # 必要に応じてポートを公開
 EXPOSE 8080

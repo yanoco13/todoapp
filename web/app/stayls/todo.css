@@ -1,0 +1,33 @@
+.wrapper {
+    margin: 0 auto;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Avenir Next";
+}
+
+.tab_todo {
+    display: flex;
+}
+
+.header {
+    width: 20%;
+    height: 100vh;
+    background-color: aqua;
+}
+
+.main {
+    width: 80%;
+    background-color: rgb(255, 0, 0);
+}
+
+.tab_list {
+    width:auto;
+    background-color: rgb(255, 0, 212);
+}
+
+.todo_list{
+    margin: 100px auto auto 50px;
+}

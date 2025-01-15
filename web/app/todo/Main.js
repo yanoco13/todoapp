@@ -1,20 +1,32 @@
 import React from 'react';
 import styles from "../stayls/todo.css";
+import List from './todoList';
 
 export default function Main() {
+  const todo = [
+    {
+      todoName: '勉強',
+    },
+    {
+      todoName: '掃除',
+    }
+  ]
+
     return (
       <div className='main'>
-        <div className='todo_list'>
-        <table>
-          <tr>
-            <td>田中</td>
-            <td>27</td>
-          </tr>
-          <tr>
-            <td>佐藤</td>
-            <td>42</td>
-          </tr>
-        </table>
+        <div className='todo'>
+          <div>
+            <div className='todo_title'>
+              todo1
+            </div>
+            {todo.map((todo) => {
+              return(
+                <List 
+                  todoName = {todo.todoName}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>
     );

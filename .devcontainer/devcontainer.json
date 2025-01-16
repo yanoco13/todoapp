@@ -1,0 +1,20 @@
+{
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "java",
+    "workspaceFolder": "/app",
+    "forwardPorts": [
+        8080
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-boot-dev-pack",
+                "vscjava.vscode-spring-initializr"
+            ]
+        }
+    },
+    "remoteUser": "root"
+}

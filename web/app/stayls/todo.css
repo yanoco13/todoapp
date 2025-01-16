@@ -1,0 +1,94 @@
+.wrapper {
+    margin: 0 auto;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Avenir Next";
+}
+
+.tab_todo {
+    display: flex;
+}
+
+.header {
+    width: 20%;
+    height: 100vh;
+    text-align: center;
+    Border-right: 1px solid #333;
+}
+
+.main {
+    width: 80%;
+}
+
+.tab_list {
+    width:auto;
+    border: solid 1px;
+}
+
+.todo{
+    margin: 100px 50px auto 50px;
+    padding: 50px;
+    border: 1px solid #333;
+}
+
+.todo_title{
+    border: 1px solid #333;
+    width: auto;
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+    background: #ebfdfc;
+    text-align: center;
+}
+
+.todo_list{
+    overflow: auto;
+    position: relative;
+    margin: 5px;
+    padding: 5px;
+}
+
+.todo_name{
+    float: left;
+    border: 1px solid #333;
+    padding: 10px;
+    margin: 5px;
+    list-style: none;
+    background: #ebfdfc;
+}
+
+.task_edit{
+    display: block;
+	text-align: center;
+	background: #338DC9;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+    position:absolute;
+    top: 50%;
+    right: 10%;
+    transform: translate(-50%, -50%);
+}
+
+.main-nav{
+    padding: 0 40px 0 30px;
+}
+
+.main-nav>li{
+    border: 1px solid #333;
+    width: auto;
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+    background: #ebfdfc;
+    text-align: center;
+}
+
+.tab_button{
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+}

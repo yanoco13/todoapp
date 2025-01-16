@@ -1,36 +1,16 @@
 'use client';
-import { useState } from 'react';
-import Modal from '../components/Modal';
+import { useState, useEffect } from "react";
+import styles from "../stayls/todo.css";
+import Header from './Header';
+import Main from './Main';
 
-const Home = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
-
+export default function Home() {
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Next.js Modal Example</h1>
-            <button onClick={openModal} style={buttonStyles}>
-                Open Modal
-            </button>
-
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <h2>Modal Title</h2>
-                <p>This is the content of the modal window.</p>
-            </Modal>
+      <div className = "wrapper">
+        <div className="tab_todo">
+          <Header />
+          <Main/>
         </div>
-    );
-};
-
-const buttonStyles = {
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    backgroundColor: '#0070f3',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-};
-
-export default Home;
+      </div>
+    )
+}

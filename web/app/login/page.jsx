@@ -1,125 +1,125 @@
 'use client';
-import { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { useForm } from "react-hook-form";
-import Questions from "../components/questions";
+import { useState } from 'react';
+import { useForm, FormProvider } from "react-hook-form";
+import Questions from "../components/Questions";
+import RadioButtons from "../components/LoginRadioButtons";
+import ColorRadioButtons from "../components/ColorRadioButtons";
+import { fetchByIdApi, insertApi } from "../api/api";
+import { motion } from "framer-motion";
+import '../styles/globals.css'
+
 
 export default function Home() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const methods = useForm();
+    const { handleSubmit, watch, formState: { errors } } = methods;
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const [user, setUser] = useState([]);
-    const [userId, setUserId] = useState("");
-    const [userPassword, setUserPassword] = useState("");
-    const [selected, setSelected] = useState("signUp");
-    const [isChecked, setChecked] = useState(false);
-
-    const [person, setPerson] = useState({
-        userId: "",
-        userPassword: "",
-        question1: "",
-        question2: "",
-        question3: "",
-        question4: "",
-        question5: ""
-    });
-
-    const loginButtons = [
-        { label: "サインアップ", value: "signUp" },
-        { label: "ログイン", value: "login" }
-    ];
-
-    const handleFormChange = (newData) => {
-        setPerson(prevData => ({ ...prevData, ...newData }));
-    };
-
-    const fetchByIdApi = async (id) => {
+    const handleSignup = async (data) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/persons?id=${id}`, { method: "GET" });
-            const data = await response.json();
-            setUser(data);
-            console.log("fetch by id:", data);
+            const userResult = await fetchByIdApi(data.userId);
+            if (userResult.length === 0) {
+                await insertApi(data);
+                router.push('/todo');
+            } else {
+                setErrorMessage("こちらのユーザIDは使用済です。他のユーザIDを検討してください。")
+            }
         } catch (error) {
-            console.error("Error fetching data:", error);
+            setErrorMessage("システムエラーです。運営に連絡お願いいたします。");
         }
     };
 
-    const insertApi = async () => {
+    const handleLogin = async (data) => {
         try {
-            const response = await fetch("http://localhost:8080/api/persons", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    personId: userId,
-                    personName: userId,
-                    loginPassword: userPassword,
-                    question1: person.question1,
-                    question2: person.question2,
-                    question3: person.question3,
-                    question4: person.question4,
-                    question5: person.question5
-                })
-            });
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            console.log("登録成功:", data);
+            const userResult = await fetchByIdApi(data.userId);
+            if (userResult.length > 0) {
+                if (data.userId === userResult[0][0] && data.userPassword === userResult[0][2]) {
+                    router.push('/todo');
+                } else {
+                    setErrorMessage("ユーザIDまたは、パスワードが間違っています。やり直してください。")
+                }
+            } else {
+                setErrorMessage("ユーザIDを間違えています。登録していない場合は、サインアップに変更してください。");
+            }
         } catch (error) {
-            console.error("登録エラー:", error);
+            setErrorMessage("システムエラーです。運営に連絡お願いいたします。");
         }
     };
 
-    const handleLogin = async () => {
-        await fetchByIdApi(userId);
-        if (user.length > 0) return;
-        await insertApi();
-        router.push('/todo');
+    const shakeAnimation = {
+        x: [0, -10, 10, -10, 10, 0],
+        transition: { duration: 0.5 }
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <div>
-                {loginButtons.map(radio => (
-                    <div key={radio.value}>
+        <form id='form' class='formContainer'>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 3 }}
+            >
+                <h1 id='logo'>Login</h1>
+                <RadioButtons
+                    id='radio'
+                    selected={watch('selected')}
+                    handleInputChange={(e) => methods.setValue('selected', e.target.value)}
+                />
+
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
+                <FormProvider {...methods}>
+                    <p class='formItem'>ユーザID</p>
+                    <motion.div
+                        animate={errors.userId ? shakeAnimation : {}}
+                    >
                         <input
-                            type="radio"
-                            name="buttons"
-                            value={radio.value}
-                            checked={radio.value === selected}
-                            onChange={(e) => setSelected(e.target.value)}
+                            type="text"
+                            {...methods.register("userId", { required: "ユーザIDは必須です。" })}
                         />
-                        <label>{radio.label}</label>
-                    </div>
-                ))}
-            </div>
+                    </motion.div>
+                    {errors.userId && <p style={{ color: 'red' }}>{errors.userId.message}</p>}
 
-            <p>ユーザID</p>
-            <input type="text" id="loginName" onChange={(e) => setUserId(e.target.value)} />
-            <p>パスワード</p>
-            <input type="password" id="loginPassword" onChange={(e) => setUserPassword(e.target.value)} />
+                    <p class='formItem'>パスワード</p>
+                    <motion.div
+                        animate={errors.userPassword ? shakeAnimation : {}}
+                    >
+                        <input
+                            type="password"
+                            {...methods.register("userPassword", { required: "パスワードは必須です。" })}
+                        />
+                    </motion.div>
+                    {errors.userPassword && <p style={{ color: 'red' }}>{errors.userPassword.message}</p>}
 
-            {selected === "login" && (
-                <>
-                    <label>パスワードを忘れてしまった場合はチェックしてください</label>
-                    <input
-                        type="checkbox"
-                        name="checked"
-                        checked={isChecked}
-                        onChange={() => setChecked(!isChecked)}
-                    />
-                    <div>
-                        <button id="submit_btn" type="button" onClick={handleLogin}>ログイン</button>
-                    </div>
+                    {watch('selected') === "login" && (
+                        <>
+                            <label>
+                                パスワードを忘れてしまった場合はチェックしてください
+                            </label>
+                            <input
+                                type="checkbox"
+                                {...methods.register("isChecked")}
+                            />
+                            <br />
+                            {!watch('isChecked') && (
+                                <button type="submit" onClick={handleSubmit(handleLogin)}>ログイン</button>
+                            )}
+                        </>
+                    )}
 
-                </>
-            )}
-
-            {(selected === "signUp" || selected === "login" && isChecked === true) &&
-                (<>
-                    <Questions onFormChange={handleFormChange} selected={selected} isChecked={isChecked} />
-                    <button id="signup_btn" type="button" onClick={handleLogin}>登録</button>
-                </>)
-            }
-        </div>
+                    {(watch('selected') === "signUp" || (watch('selected') === "login" && watch('isChecked'))) && (
+                        <>
+                            <Questions selected={watch('selected')} isChecked={watch('isChecked')} handleSubmit={handleSubmit} setErrorMessage={setErrorMessage} />
+                            {(watch('selected') === "signUp") && (
+                                <>
+                                    <br />
+                                    <button type="submit" onClick={handleSubmit(handleSignup)}>登録</button>
+                                </>
+                            )}
+                        </>
+                    )}
+                </FormProvider>
+            </motion.div >
+        </form >
     );
 }

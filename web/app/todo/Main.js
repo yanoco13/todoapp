@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import styles from "../stayls/todo.css";
 import List from './todoList';
@@ -23,6 +24,7 @@ export default function Main() {
               return(
                 <List 
                   todoName = {todo.todoName}
+                  key={todo.todoName}
                 />
               )
             })}

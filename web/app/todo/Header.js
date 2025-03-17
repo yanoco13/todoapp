@@ -1,8 +1,30 @@
-import React from 'react';
+'use client';
 import styles from "../stayls/todo.css";
 import TabList from './tabList';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import React, { useEffect } from 'react';
 
 export default function Header() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [tab, setTab] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const id = "tab001";
+      try {
+        const response = await fetch(`http://localhost:8080/api/tabs?id=${id}`, { method: "GET" });
+        console.log(response);
+        const data = await response.json();
+        setTab(data);
+        console.log("fetch by id:", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  },[]);
+
   const Tab = [
     {
       tabName: 'todo1',
@@ -14,10 +36,11 @@ export default function Header() {
 
   return (
     <div className='header'>
-      {Tab.map((Tab) => {
+      {tab.map((tab) => {
         return (
           <TabList
-            tabName={Tab.tabName}
+            tabName={tab.tabName}
+            key={tab.tabId}
           />
         )
       })}

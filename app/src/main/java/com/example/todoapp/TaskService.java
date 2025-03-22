@@ -19,15 +19,11 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public Optional<Task> getTaskById(String id) {
-        return taskRepository.findById(id);
+    public Optional<Task> getTaskByRecordTabId(String recordTabId) {
+        return taskRepository.findByRecordTabId(recordTabId);
     }
 
     public Task saveTask(Task task) {
         return taskRepository.save(task);
-    }
-
-    public void deleteTask(String id) {
-        taskRepository.deleteById(id);
     }
 }

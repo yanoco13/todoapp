@@ -17,23 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RequestMapping("/api/tasks")
 public class TaskController {
     @Autowired
     private TaskService taskService;
-
-    @Autowired
-    EntityManager entityManager;
 
     private static final Logger logger = Logger.getLogger(TaskController.class.getName());
 
@@ -50,24 +44,28 @@ public class TaskController {
     }
 
     @GetMapping
-    public Object getAllTasks() {
-        logger.info("Fetching all tasks");
+    public List<Task> getAllTasks() {
+        logger.info("Fetching all Tasks");
         return taskService.getAllTasks();
+    }
+
+    @GetMapping("{record_tab_id}")
+    public ResponseEntity<Task> getTaskByRecordTabId(@PathVariable String recordTabId) {
+        return taskService.getTaskByRecordTabId(recordTabId).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody @Valid Task task) {
-        logger.info("ログ出力テストTaskPost");
-        task.setTaskId(task.getTaskId() != null ? task.getTaskId() : UUID.randomUUID().toString());
-        task.setTaskName(null);
-        task.setTaskNote("備考");
-        task.setTaskStartTime(new Date());
-        task.setTaskEndTime(new Date());
-        task.setTaskColor("red");
-        task.setRecordUser("admin2");
-        task.setRecordDate(new Date());
-        task.setCreateUser("admin2");
-        task.setCreateDate(new Date());
+        Date nowDate = new Date();
+        task.setTaskId(task.getTaskId());
+        task.setTaskName(task.getTaskName());
+        task.setTaskColor(task.getTaskColor());
+        task.setTaskNote(task.getTaskNote());
+        task.setRecordDate(nowDate);
+        task.setCreateDate(nowDate);
+        task.setCreateUser(UUID.randomUUID().toString());
+        task.setRecordUser(UUID.randomUUID().toString());
         Task savedTask = taskService.saveTask(task);
 
         return ResponseEntity.ok(savedTask);

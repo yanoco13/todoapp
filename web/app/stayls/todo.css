@@ -12,7 +12,7 @@ body {
     display: flex;
 }
 
-.header {
+.heade {
     width: 20%;
     height: 100vh;
     text-align: center;
@@ -24,7 +24,7 @@ body {
 }
 
 .tab_list {
-    width:auto;
+    width:100%;
     border: solid 1px;
 }
 

@@ -35,11 +35,12 @@ export default function Header() {
   ]
 
   return (
-    <div className='header'>
+    <div className='heade'>
       {tab.map((tab) => {
         return (
           <TabList
             tabName={tab.tabName}
+            tabId={tab.tabId}
             key={tab.tabId}
           />
         )

@@ -91,10 +91,6 @@ public class Task{
 		this.taskEndTime = taskEndTime;
 	}
 
-	public Date gettaskEndTime() {
-		return this.recordDate;
-	}
-
 	public String getTaskNote() {
 		return this.taskNote;
 	}

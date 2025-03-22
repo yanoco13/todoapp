@@ -50,9 +50,9 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable String id) {
-        return taskService.getTaskById(id).map(ResponseEntity::ok)
+    @GetMapping("{record_tab_id}")
+    public ResponseEntity<Task> getTaskByRecordTabId(@PathVariable String recordTabId) {
+        return taskService.getTaskByRecordTabId(recordTabId).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -71,25 +71,5 @@ public class TaskController {
         Task savedTask = taskService.saveTask(task);
 
         return ResponseEntity.ok(savedTask);
-    }
-
-    @PutMapping("{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable String id,
-            @RequestBody Task taskDetails) {
-        return taskService.getTaskById(id).map(task -> {
-            task.setTaskName(taskDetails.getTaskName());
-            task.setRecordDate(taskDetails.getRecordDate());
-            task.setRecordUser(taskDetails.getRecordUser());
-            Task updatedTask = taskService.saveTask(task);
-            return ResponseEntity.ok(updatedTask);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
-        return taskService.getTaskById(id).map(task -> {
-            taskService.deleteTask(id);
-            return ResponseEntity.ok().<Void>build();
-        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   app:
     build:
@@ -23,8 +23,6 @@ services:
       - "8080:8080"
     tty: true
     stdin_open: true
-    volumes:
-      - ../:/usr/src/web
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/mysqlpass
       SPRING_DATASOURCE_USERNAME: todo000db
@@ -36,6 +34,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    volumes:
+      - ./src:/app/src
 
   database:
     image: mysql:8.3.0

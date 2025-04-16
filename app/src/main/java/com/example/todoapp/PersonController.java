@@ -1,7 +1,6 @@
 package com.example.todoapp;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -18,17 +17,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/persons")
 public class PersonController {
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    EntityManager entityManager;
 
     private static final Logger logger = Logger.getLogger(PersonController.class.getName());
 
@@ -45,19 +50,23 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<Person> getAllPersons() {
-        logger.info("Fetching all persons");
-        return personService.getAllPersons();
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<Person> getPersonById(@PathVariable String id) {
-        return personService.getPersonById(id).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public Object getPersonById(@RequestParam String id) {
+        try {
+            logger.info("Fetching person by ID: " + id);
+            Query query = entityManager.createNativeQuery(
+                    "SELECT * FROM mysqlpass.person WHERE person_id = " + "'" + id + "'");
+            Object executeResult = query.getResultList(); // クエリの結果取得
+            logger.info("executeResult：" + executeResult);
+            return executeResult;
+        } catch (Exception e) {
+            logger.severe("Error fetching person by ID: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error occurred");
+        }
     }
 
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody @Valid Person person) {
+        logger.info("ログ出力テストXXXXXXX");
         Date nowDate = new Date();
         person.setPersonId(
                 person.getPersonId() != null ? person.getPersonId() : UUID.randomUUID().toString());

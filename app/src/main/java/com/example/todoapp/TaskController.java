@@ -1,7 +1,6 @@
 package com.example.todoapp;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -67,7 +66,6 @@ public class TaskController {
         task.setCreateDate(nowDate);
         task.setCreateUser(UUID.randomUUID().toString());
         task.setRecordUser(UUID.randomUUID().toString());
-
         Task savedTask = taskService.saveTask(task);
 
         return ResponseEntity.ok(savedTask);

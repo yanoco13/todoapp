@@ -51,7 +51,12 @@ export const insertTaskApi = async (formData) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                taskId: formData.taskId
+                taskId: Math.random().toString(32).substring(2),
+                taskName: formData.taskName,
+                taskColor: formData.taskColor,
+                taskStartTime: formData.taskStartDate,
+                taskEndTime: formData.taskEndDate,
+                taskNote: formData.taskNote
             })
         });
         if (!response.ok) throw new Error('Network response was not ok');
@@ -59,6 +64,32 @@ export const insertTaskApi = async (formData) => {
     } catch (error) {
         throw new Error(error.message);
     }
+}
+
+// src/api/api.js
+
+/**
+ * 指定ユーザのタブ一覧を取得
+ * GET /api/users/{userId}/tabs
+ */
+export async function fetchTabs(userId) {
+    const res = await fetch(`http://localhost:8080/api/users/tabs?userId=${userId}`, { method: "GET" });
+    if (!res.ok) {
+        throw new Error(`fetchTabs failed: ${res.status}`);
+    }
+    return res.json();
+}
+
+/**
+ * 指定タブのタスク一覧を取得
+ * GET /api/users/{userId}/tabs/{tabId}/tasks
+ */
+export async function fetchTasks(userId, tabId) {
+    const res = await fetch(`/api/users/${userId}/tabs/${tabId}/tasks`);
+    if (!res.ok) {
+        throw new Error(`fetchTasks failed: ${res.status}`);
+    }
+    return res.json();
 }
 
 

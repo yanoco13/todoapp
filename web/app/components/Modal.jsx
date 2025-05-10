@@ -2,8 +2,12 @@
 import React, { useState } from "react";
 import ColorRadioButtons from './ColorRadioButtons';
 import { fetchTasksApi, insertTaskApi } from "../api/api";
+import { useForm, FormProvider } from "react-hook-form";
 
 const Modal = ({ isOpen, onClose, children }) => {
+    const methods = useForm();
+    const { handleSubmit, watch, formState: { errors } } = methods;
+
     const now = new Date();
     const formattedNow = now.toISOString().slice(0, 16); // 現在時刻を "yyyy-MM-ddThh:mm" 形式に変換
 
@@ -13,60 +17,70 @@ const Modal = ({ isOpen, onClose, children }) => {
         setDateTime(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(`選択した日付と時間: ${dateTime}`);
-    };
+    const registTask = async (data) => {
+        try {
+            await insertTaskApi(data);
+            onClose;
+        } catch (error) {
+            setErrorMessage("システムエラーです。運営に連絡お願いいたします。");
+        }
+    }
 
     if (!isOpen) return null;
-    const getTasks = async () => {
-        console.log("=--------------");
-        try {
-            console.log("-----------------げっっと");
-            const taskResult = await fetchTasksApi();
-            console.log(taskResult);
-        } catch (error) {
-            console.log("=-------------------失敗");
-        }
-    };
-
-    const insertTasks = async (data) => {
-        data.taskId = "ij";
-        await insertTaskApi(data);
-    };
 
     return (
         <>
             <div style={styles.overlay}>
                 <div style={styles.modal}>
-                    <div name="taskName">
-                        <label>タスク名</label>
-                        <br />
-                        <input type="text" style={styles.inputTaskName} />
-                    </div>
-                    <div name="taskColor" style={styles.inputColorRadio}>
-                        <label>色</label>
-                        <ColorRadioButtons />
-                    </div>
-                    <div name="taskNote">
-                        <label htmlFor="">備考欄</label>
-                        <br />
-                        <input type="textarea" style={styles.inputTaskNote} />
-                    </div>
-                    <div name="proceedButton">
-                        <button onClick={insertTasks}>OK</button>
-                    </div>
-                    <div name="cancelButton">
-                        <button>キャンセル</button>
-                    </div>
-                    <input
-                        type="datetime-local"
-                        id="datetime"
-                        name="datetime"
-                        value={dateTime}
-                        onChange={handleChange}
-                    />
-                    <button onClick={onClose} style={styles.closeButton}>Close</button>
+                    <FormProvider>
+                        <div name="taskName">
+                            <label>タスク名</label>
+                            <br />
+                            <input type="text" style={styles.inputTaskName} {...methods.register("taskName", { required: "タスク名は必須です。" })} />
+                        </div>
+                        <div name="taskColor" style={styles.inputColorRadio} >
+                            <label>色</label>
+                            <ColorRadioButtons
+                                id='colorRadio'
+                                selected={watch('taskColor')}
+                                handleInputChange={(e) => methods.setValue('taskColor', e.target.value)}
+                                {...methods.register("taskColor")}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="">タスク開始時間</label>
+                            <input
+                                type="datetime-local"
+                                id="taskStartDate"
+                                name="datetime"
+                                onChange={handleChange}
+                                {...methods.register("taskStartDate")}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="">タスク終了時間</label>
+                            <input
+                                type="datetime-local"
+                                id="taskEndDate"
+                                name="datetime"
+                                onChange={handleChange}
+                                {...methods.register("taskEndDate")}
+                            />
+                        </div>
+
+                        <div name="taskNote">
+                            <label htmlFor="">備考欄</label>
+                            <br />
+                            <input type="textarea" style={styles.inputTaskNote} {...methods.register("taskNote")} />
+                        </div>
+                        <div name="proceedButton">
+                            <button onClick={handleSubmit(registTask)}>OK</button>
+                        </div>
+                        <div name="cancelButton">
+                            <button>キャンセル</button>
+                        </div>
+                        <button onClick={onClose} style={styles.closeButton}>Close</button>
+                    </FormProvider>
                 </div>
             </div>
         </>

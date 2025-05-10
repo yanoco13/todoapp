@@ -6,9 +6,11 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# ソースコードのコピーとビルド
+# ソースコードのコピー
 COPY src ./src
-RUN mvn package -DskipTests
+
+# クリーン＆ビルド
+RUN mvn clean package -DskipTests
 
 # 実行ステージ
 FROM eclipse-temurin:17-jre-jammy

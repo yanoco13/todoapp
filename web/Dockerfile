@@ -11,7 +11,12 @@ RUN npm install react-intersection-observer
 RUN npm install react-hook-form yup @hookform/resolvers
 RUN npm i @mui/x-date-pickers
 RUN npm i dayjs
-
+RUN npm install --unsafe-perm=true
+RUN npm install react-icons --save
+RUN npm install react-dnd react-dnd-html5-backend
+RUN npm install @dnd-kit/core @dnd-kit/sortable
+RUN rm -rf node_modules package-lock.json
+RUN npm install
 
 # アプリケーションのソースコードをコピー
 COPY . .

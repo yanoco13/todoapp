@@ -76,14 +76,19 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <!-- ▼ ここから configuration ▼ -->
                 <configuration>
-                    <excludes>
+                    <mainClass>com.example.todoapp.TodoappApplication</mainClass>
+
+                    <excludes>                      <!-- 他の設定と併存できる -->
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>
+                <!-- ▲ configuration の中に mainClass を入れる ▲ -->
             </plugin>
         </plugins>
     </build>

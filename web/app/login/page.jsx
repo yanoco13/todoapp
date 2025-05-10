@@ -7,7 +7,7 @@ import RadioButtons from "../components/LoginRadioButtons";
 import ColorRadioButtons from "../components/ColorRadioButtons";
 import { fetchByIdApi, insertApi } from "../api/api";
 import { motion } from "framer-motion";
-import '../styles/globals.css'
+import '../styles/globals.css';
 
 
 export default function Home() {
@@ -21,7 +21,9 @@ export default function Home() {
             const userResult = await fetchByIdApi(data.userId);
             if (userResult.length === 0) {
                 await insertApi(data);
-                router.push('/todo');
+                localStorage.setItem("userId", data.userId);
+                console.log(data.userId);
+                router.push(`/todo?userId=${data.userId}`);
             } else {
                 setErrorMessage("こちらのユーザIDは使用済です。他のユーザIDを検討してください。")
             }
@@ -35,7 +37,8 @@ export default function Home() {
             const userResult = await fetchByIdApi(data.userId);
             if (userResult.length > 0) {
                 if (data.userId === userResult[0][0] && data.userPassword === userResult[0][2]) {
-                    router.push('/todo');
+                    localStorage.setItem("userId", data.userId);
+                    router.push('/todo?userId=${data.userId}');
                 } else {
                     setErrorMessage("ユーザIDまたは、パスワードが間違っています。やり直してください。")
                 }

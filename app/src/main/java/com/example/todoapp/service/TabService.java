@@ -1,16 +1,25 @@
 package com.example.todoapp.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.todoapp.model.Tab;
+import com.example.todoapp.repository.TabRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TabService {
+    private final TabRepository tabRepository;
+
+    @Autowired
+    public TabService(TabRepository tabRepository) {
+        this.tabRepository = tabRepository;
+    }
+
+
     public List<Tab> getTabsByUser(String userId) {
-        // ここに実際のロジックを実装
-        return new ArrayList<>();
+        return tabRepository.findByUserId(userId); // メソッド名クエリ
     }
 
     public List<Tab> getAllTabs() {

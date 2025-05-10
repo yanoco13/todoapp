@@ -73,7 +73,7 @@ export const insertTaskApi = async (formData) => {
  * GET /api/users/{userId}/tabs
  */
 export async function fetchTabs(userId) {
-    const res = await fetch(`http://localhost:8080/api/users/tabs?userId=${userId}`, { method: "GET" });
+    const res = await fetch(`http://localhost:8080/api/users/${userId}/tabs`, { method: "GET" });
     if (!res.ok) {
         throw new Error(`fetchTabs failed: ${res.status}`);
     }
@@ -85,7 +85,7 @@ export async function fetchTabs(userId) {
  * GET /api/users/{userId}/tabs/{tabId}/tasks
  */
 export async function fetchTasks(userId, tabId) {
-    const res = await fetch(`/api/users/${userId}/tabs/${tabId}/tasks`);
+    const res = await fetch(`http://localhost:8080/api/users/${userId}/tabs/${tabId}/tasks`, { method: "GET" });
     if (!res.ok) {
         throw new Error(`fetchTasks failed: ${res.status}`);
     }

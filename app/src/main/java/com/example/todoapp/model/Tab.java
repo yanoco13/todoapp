@@ -1,23 +1,39 @@
 package com.example.todoapp.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Entity
+@Data
+@Table(name = "tab")
 public class Tab {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tab_id") // DB上のカラム名
+    private String id;
+    @Column(name = "tab_name") // DB上のカラム名
     private String name;
+    @Column(name = "create_user") // DB上のカラム名
     private String userId;
 
     public Tab() {}
 
-    public Tab(Long id, String name, String userId) {
+    public Tab(String id, String name, String userId) {
         this.id = id;
         this.name = name;
         this.userId = userId;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

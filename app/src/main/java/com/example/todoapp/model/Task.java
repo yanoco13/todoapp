@@ -1,25 +1,39 @@
 package com.example.todoapp.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Entity
+@Data
+@Table(name = "task")
 public class Task {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id") // DB上のカラム名
+    private String id;
+    @Column(name = "task_name") // DB上のカラム名
     private String title;
-    private boolean completed;
-    private Long tabId;
+    @Column(name = "record_tab_id") // DB上のカラム名
+    private String tabId;
 
     public Task() {}
 
-    public Task(Long id, String title, boolean completed, Long tabId) {
+    public Task(String id, String title, boolean completed, String tabId) {
         this.id = id;
         this.title = title;
-        this.completed = completed;
         this.tabId = tabId;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -31,19 +45,11 @@ public class Task {
         this.title = title;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public Long getTabId() {
+    public String getTabId() {
         return tabId;
     }
 
-    public void setTabId(Long tabId) {
+    public void setTabId(String tabId) {
         this.tabId = tabId;
     }
 }
